@@ -8,3 +8,5 @@ depois criei os controllers e rotas, nao satisfeito criei interfaces para o cont
 daquela class, nao gostei dessa ideia
 
 proximo passo: interface para casos de uso
+
+adicionei injecao de dependencia na class de rotas, pois ela ainda dependia do controller, e isso deixava os teste mais dificeis

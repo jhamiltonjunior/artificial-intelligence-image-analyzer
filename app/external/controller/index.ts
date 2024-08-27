@@ -1,11 +1,14 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { IController } from "./interface";
+import { IUseCase } from "../routes/interface";
 
 export default class Controller implements IController {
   private req: IncomingMessage;
   private res: ServerResponse;
+  private usecase: IUseCase;
 
-  constructor(req:IncomingMessage, res: ServerResponse) {
+  constructor(req:IncomingMessage, res: ServerResponse, usecase: IUseCase) {
+    this.usecase = usecase;
     this.req = req;
     this.res = res;
   }

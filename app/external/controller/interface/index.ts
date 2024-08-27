@@ -1,5 +1,3 @@
-import { IncomingMessage, ServerResponse } from "http";
-
 // Interface para definir o contrato de Controller
 export interface IController {
   upload(): Promise<void>;
