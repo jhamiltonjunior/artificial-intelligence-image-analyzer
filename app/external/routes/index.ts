@@ -1,33 +1,32 @@
 import { IncomingMessage, ServerResponse } from "node:http";
+import Controller from "../controller";
 
-export default class Routes {
-    private req: IncomingMessage;
-    private res: ServerResponse;
+export default class Routes extends Controller {
 
     constructor(req:IncomingMessage, res: ServerResponse) {
-        this.req = req;
-        this.res = res;
+        super(req, res);
+        this.init();
+    }
 
-        switch (req.url) {
-            case '/':
-                this.upload();
-                break;
-            case '/about':
-                // this.about();
-                break;
-            default:
-                this.notFound();
-                break;
+    private init() {
+        const url = this.req.url || '';
+        const path = new URL(url, `http://${this.req.headers.host}`).pathname;
+        const handleMethodGet = path.split('/');
+
+        if (this.req.method === 'GET' && handleMethodGet.length === 3 && handleMethodGet[2] === 'list') {
+            this.handleList(handleMethodGet[1]);
+        } else {
+            switch (url && this.req.method) {
+                case '/upload' && 'POST':
+                    this.upload();
+                    break;
+                case '/confirm' && 'PATCH':
+                    this.confirm();
+                    break;
+                default:
+                    this.notFound();
+                    break;
+            }
         }
-    }
-
-    private async upload() {
-        this.res.writeHead(201, { 'Content-Type': 'text/plain' });
-        this.res.end('Upload is work\n');
-    }
-
-    private async notFound() {
-        this.res.writeHead(404, { 'Content-Type': 'application/json' });
-        this.res.end(JSON.stringify({ message: 'Not Found' }));
     }
 }
