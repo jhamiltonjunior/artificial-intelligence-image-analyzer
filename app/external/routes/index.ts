@@ -1,10 +1,16 @@
 import { IncomingMessage, ServerResponse } from "node:http";
+import { IController } from "../controller/interface";
 import Controller from "../controller";
 
-export default class Routes extends Controller {
+export default class Routes {
+    private req: IncomingMessage;
+    private res: ServerResponse;
+    private controller: IController;
 
     constructor(req:IncomingMessage, res: ServerResponse) {
-        super(req, res);
+        this.req = req;
+        this.res = res;
+        this.controller = new Controller(req, res);
         this.init();
     }
 
@@ -14,19 +20,20 @@ export default class Routes extends Controller {
         const handleMethodGet = path.split('/');
 
         if (this.req.method === 'GET' && handleMethodGet.length === 3 && handleMethodGet[2] === 'list') {
-            this.handleList(handleMethodGet[1]);
-        } else {
-            switch (url && this.req.method) {
-                case '/upload' && 'POST':
-                    this.upload();
-                    break;
-                case '/confirm' && 'PATCH':
-                    this.confirm();
-                    break;
-                default:
-                    this.notFound();
-                    break;
-            }
+            this.controller.handleList(handleMethodGet[1]);
+            return;
+        }
+
+        switch (url && this.req.method) {
+            case '/upload' && 'POST':
+                this.controller.upload();
+                break;
+            case '/confirm' && 'PATCH':
+                this.controller.confirm();
+                break;
+            default:
+                this.controller.notFound();
+                break;
         }
     }
 }
