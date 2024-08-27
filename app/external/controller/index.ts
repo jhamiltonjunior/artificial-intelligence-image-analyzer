@@ -10,6 +10,14 @@ export default class Controller implements IController {
     this.res = res;
   }
 
+  public getReq(): IncomingMessage {
+    return this.req;
+  }
+
+  public getRes(): ServerResponse {
+    return this.res;
+  }
+
   private response(statusCode: number, data: any, contentType: string = 'application/json') {
     this.res.writeHead(statusCode, { 'Content-Type': contentType });
     this.res.end(JSON.stringify(data));

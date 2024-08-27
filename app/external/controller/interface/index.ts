@@ -6,4 +6,6 @@ export interface IController {
   confirm(): Promise<void>;
   handleList(customerCode: string): Promise<void>;
   notFound(): void;
+  getReq(): any;
+  getRes(): any;
 }

@@ -7,10 +7,10 @@ export default class Routes {
     private res: ServerResponse;
     private controller: IController;
 
-    constructor(req:IncomingMessage, res: ServerResponse) {
-        this.req = req;
-        this.res = res;
-        this.controller = new Controller(req, res);
+    constructor(controller: IController) {
+        this.controller = controller;
+        this.req = this.controller.getReq();
+        this.res = this.controller.getRes();
         this.init();
     }
 
