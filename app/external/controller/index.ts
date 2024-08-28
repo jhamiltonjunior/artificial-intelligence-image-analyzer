@@ -29,9 +29,29 @@ export default class Controller implements IController {
   }
 
   public async upload(): Promise<void> {
-    await this.parseJSON();
+    try {
+      await this.parseJSON();
+    } catch (error) {
+      console.error('Erro ao analisar JSON:', error);
+
+      this.response(500, {
+        error_code: 'INTERNAL_SERVER_ERROR',
+        message: 'Houve um erro interno no servidor',
+      });
+
+      return;
+    }
     
     console.log('Body:', this.body);
+
+    const error = await this.usecase.handleUpload(this.body);
+    if (error) {
+      this.response(error.code, {
+        "error_code": "INVALID_DATA",
+        "error_description": error.message,
+      });
+      return;
+    }
     
     this.response(200, {
       message: 'upload is work',
@@ -51,25 +71,28 @@ export default class Controller implements IController {
   }
 
   private async parseJSON(): Promise<any> {
-    let body = '';
+    return new Promise((resolve, reject) => {
+      let body = '';
 
-    this.req.on('data', (chunk) => {
-        body += chunk.toString();
-    });
+      this.req.on('data', (chunk) => {
+          body += chunk.toString();
+          console.log('body:', body);
+      });
 
-    this.req.on('end', () => {
-        try {
-            const jsonData = JSON.parse(body);
-            
-            console.log('Dados recebidos:', jsonData);
-            this.body = jsonData
-          } catch (error) {
-            console.error('Erro ao analisar JSON:', error);
-            this.response(500, {
-              error_code: 'INTERNAL_SERVER_ERROR',
-              message: 'Houve um erro interno no servidor',
-            });
-        }
+      this.req.on('end', () => {
+          try {
+              const jsonData = JSON.parse(body);
+              this.body = jsonData
+              resolve(true);
+            } catch (error) {
+              console.error('Erro ao analisar JSON:', error);
+              this.response(500, {
+                error_code: 'INTERNAL_SERVER_ERROR',
+                message: 'Houve um erro interno no servidor',
+              });
+              reject(error);
+          }
+      });
     });
   }
 }
