@@ -1,13 +1,15 @@
 import { createServer } from 'node:http';
-import Routes from './external/routes';
-import Controller from './external/controller';
+import Routes from './adapter/routes';
+import Controller from './adapter/controller';
 import Usecase from './usecase';
+import ToolsUseCase from './external/service/toolsToUseCase';
 
 const host = '127.0.0.1'
 const port = 3000;
 
 const server = createServer((req, res) => {
-    const usecase = new Usecase();
+    const tools = new ToolsUseCase();
+    const usecase = new Usecase(tools);
     const controller = new Controller(req, res, usecase);
     new Routes(controller);
 });

@@ -1,16 +1,31 @@
-import { IUseCase, response } from "./interface";
-import { validate as uuidValidate } from 'uuid';
-import isBase64 from 'is-base64';
-import { parse } from "file-type-mime";
-import fs from 'fs';
+import { IUseCase, response } from "../domains/repository/index";
+import fs from 'fs/promises';
+import { IToolsUseCase } from "../external/service/interface";
 
 export default class Usecase implements IUseCase {
-    constructor() {
-        // this.init();
+    private tools: IToolsUseCase
+  
+    constructor(tools: IToolsUseCase) {
+      this.tools = tools;
     }
 
-    public async confirm(): Promise<void> {
+    public async confirm(data: any): Promise<response | undefined> {
       console.log(`confirm is work`);
+      if (!data.customer_code || !this.tools.uuidValidate(data.customer_code))
+        return {
+          code: 400,
+          error_code: 'INVALID_DATA',
+          message: `The customer_code is invalid`,
+        };
+
+      if (!data.confirmed_value || isNaN(data.confirmed_value) || data.confirmed_value < 0)
+        return {
+          code: 400,
+          error_code: 'INVALID_DATA',
+          message: `The confirmed_value is invalid`,
+        };
+
+      return undefined;
     }
   
     public async handleList(customerCode: string): Promise<void> {
@@ -24,36 +39,36 @@ export default class Usecase implements IUseCase {
       }
 
       const imageOrError = await this.saveImage(data.image);
-      if (typeof imageOrError !== 'string') {
+      if (typeof imageOrError !== 'string')
         return imageOrError;
-      }
 
       // Talvez isso nao seja o suficiente
       setTimeout(async () => {
-        await this.deleteImage(imageOrError);
-      }, 10000);
+        this.deleteImage(imageOrError);
+      }, 60000);
 
       return undefined;
     }
 
     private async deleteImage(filePath: string): Promise<response | undefined> {
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error('Error to delete image:', err);
-          return {
-            code: 500,
-            error_code: 'INTERNAL_SERVER_ERROR',
-            message: `Error to delete image`,
-          };
-        }
-      });
+      try{
+        fs.unlink(filePath)
+      } catch (err) {
+        // salvar os dados em um arquivo de log
+        console.error('Error to delete image:', err);
+          // return {
+          //   code: 500,
+          //   error_code: 'INTERNAL_SERVER_ERROR',
+          //   message: `Error to delete image`,
+          // };
+      }
 
       return undefined;
     }
 
     private async saveImage(image: string): Promise<response | string> {
       const mimeType = await this.detectImageType(image);
-      if (!mimeType.mime) {
+      if (!mimeType?.mime) {
         return {
           code: 400,
           error_code: 'INVALID_DATA',
@@ -64,29 +79,31 @@ export default class Usecase implements IUseCase {
       const filePath = `./uploads/${Date.now()}.${mimeType.ext}`;
       const dirPath = './uploads';
 
-      if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-      }
-
-      fs.writeFile(filePath, image, 'base64', (err) => {
-        if (err) {
-          console.error('Error to save image:', err);
-          return {
-            code: 500,
-            error_code: 'INTERNAL_SERVER_ERROR',
-            message: `Error to save image`,
-          };
+      try {
+        if (!await this.checkIfDirExists(dirPath)) {
+          fs.mkdir(dirPath, { recursive: true });
         }
-      })
+        fs.writeFile(filePath, image, 'base64')
+      } catch (err) {
+        console.error('Error to save image:', err);
+        return {
+          code: 500,
+          error_code: 'INTERNAL_SERVER_ERROR',
+          message: `Error to save image`,
+        };
+      }
 
       return filePath;
     }
 
-    private async detectImageType(image: string): Promise<any> {
-      const buffer = Buffer.from(image, 'base64');
-      const result = parse(buffer);
+    private async checkIfDirExists(dir: string): Promise<boolean> {
+      return await fs.access(dir, fs.constants.F_OK)
+               .then(() => true)
+               .catch(() => false)
+    }
 
-      return result;
+    private async detectImageType(image: string): Promise<any> {
+      return await this.tools.detectImageType(image);
     }
 
     private isDateValid(date: string): boolean {
@@ -101,7 +118,7 @@ export default class Usecase implements IUseCase {
           message: `The measure_type is invalid`,
         }
 
-      if (!uuidValidate(data.customer_code)) {
+      if (!this.tools.uuidValidate(data.customer_code)) {
         return {
           code: 400,
           error_code: 'INVALID_DATA',
@@ -117,7 +134,7 @@ export default class Usecase implements IUseCase {
         };
       }
 
-      if (!isBase64(data.image, { paddingRequired: true })) {
+      if (!data.image && !this.tools.checkIfIsBase64(data.image, { paddingRequired: true })) {
         return {
           code: 400,
           error_code: 'INVALID_DATA',
