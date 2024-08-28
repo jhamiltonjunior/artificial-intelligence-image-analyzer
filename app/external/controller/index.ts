@@ -32,17 +32,12 @@ export default class Controller implements IController {
     try {
       await this.parseJSON();
     } catch (error) {
-      console.error('Erro ao analisar JSON:', error);
-
       this.response(500, {
         error_code: 'INTERNAL_SERVER_ERROR',
         message: 'Houve um erro interno no servidor',
       });
-
       return;
     }
-    
-    console.log('Body:', this.body);
 
     const error = await this.usecase.handleUpload(this.body);
     if (error) {
