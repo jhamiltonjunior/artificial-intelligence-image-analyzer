@@ -12,3 +12,7 @@ proximo passo: interface para casos de uso
 adicionei injecao de dependencia na class de rotas, pois ela ainda dependia do controller, e isso deixava os teste mais dificeis
 
 precisei pegar o conteudo do body
+
+salvar a imagens em uma pasta tmp ou static e apagar depois
+
+precisei saber qual a extencao da imagem pois isso pode ser variavel
