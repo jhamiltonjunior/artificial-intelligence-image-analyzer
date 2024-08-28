@@ -1,7 +1,7 @@
-import { ICustomerRepository, response } from "../../../domains/repository";
+import { IHandleImageAnalyzerRepository, response } from "../../../domains/repository";
 import MysqlConnection, {Credentials} from "./implements";
 
-export class ImageAnalyzer extends MysqlConnection implements ICustomerRepository {
+export class ImageAnalyzer extends MysqlConnection implements IHandleImageAnalyzerRepository {
   constructor(credentials: Credentials) {
     super(credentials);
   }
@@ -12,10 +12,10 @@ export class ImageAnalyzer extends MysqlConnection implements ICustomerRepositor
   }
 
   public async confirm(id: string, value: number): Promise<void> {
-    await this.connection.query('UPDATE measure SET confirmed = 1, value = ? WHERE code = ?', [value, id]);
+    await this.connection.query('UPDATE measures SET has_confirmed = 1, confirmed_value = ? WHERE measure_uuid = ?', [value, id]);
   }
 
   public async checkIfMeasureExists(id: string): Promise<any> {
-    return await this.connection.query('SELECT confirmed FROM measure WHERE code = ?', [id]);
+    return await this.connection.query('SELECT has_confirmed FROM measures WHERE measure_uuid = ?', [id]);
   }
 }

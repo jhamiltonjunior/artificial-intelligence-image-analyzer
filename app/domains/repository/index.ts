@@ -16,5 +16,5 @@ export interface IHandleImageAnalyzerRepository {
 }
 
 export interface ICustomerRepository {
-  checkIfMeasureExists(data: any): Promise<response | undefined>;
+  listMeasure(customerId: string): Promise<response | undefined>;
 }

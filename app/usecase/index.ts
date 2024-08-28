@@ -35,20 +35,21 @@ export default class Usecase implements IUseCase {
 
       const measureExists = await this.handleImageAnalyzerRepository.checkIfMeasureExists(data.measure_uuid);
 
-      if (!measureExists)
+      if (!measureExists[0][0])
         return {
           code: 404,
           error_code: 'MEASURE_NOT_FOUND',
           message: `The measure does not exist`,
         };
 
-      if (measureExists[0][0].confirmed === 1) {
+      if (measureExists[0][0].has_confirmed === 1) {
         return {
           code: 409,
           error_code: 'CONFIRMATION_DUPLICATE',
           message: `Leitura do mês já realizada`,
         };
       }
+      console.log(measureExists);
 
       try {
         await this.handleImageAnalyzerRepository.confirm(data.measure_uuid, data.confirmed_value);
