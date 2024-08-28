@@ -11,5 +11,7 @@ export interface IUseCase {
 
 export interface IHandleImageAnalyzerRepository {
   confirm(data: any): Promise<response | undefined>;
+  saveDataGenerateForIA(data: any): Promise<response | undefined>;
+  // confirm(data: any): Promise<response | undefined>;
 }
 

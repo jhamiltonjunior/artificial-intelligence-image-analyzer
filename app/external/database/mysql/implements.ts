@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { IHandleImageAnalyzerRepository } from "../../../domains/repository";
+import { IHandleImageAnalyzerRepository, response } from "../../../domains/repository";
 
 type credentials = {
   host: string;
@@ -26,12 +26,20 @@ export default class MysqlImplements implements IHandleImageAnalyzerRepository {
   private async connect(): Promise<any> {
     console.log(`connect is work`);
     this.connection = await mysql.createConnection(this.credentials);
-    this.connection.query('CREATE DATABASE IF NOT EXISTS image_analyzer');
+
     return undefined;
   }
 
-  public async confirm(data: any): Promise<any> {
+  public async saveDataGenerateForIA(data: any): Promise<response | undefined> {
+    console.log(`handleUpload is work`);
+    return undefined;
+  }
+
+  public async confirm(data: any): Promise<response | undefined> {
     console.log(`confirm is work`);
+
+    this.connection.query('SELECT * FROM table WHERE id = ?', [data.id]);
+
     return undefined;
   }
 }
