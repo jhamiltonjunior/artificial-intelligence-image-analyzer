@@ -83,7 +83,19 @@ export default class Controller implements IController {
     this.response(200, { success: true });
   }
 
-  public async handleList(customerCode: string): Promise<void> {
+  public async handleList(customerCode: string, searchParams: any): Promise<void> {
+
+    const mensureType = searchParams.get('measure_type');
+
+    this.usecase.handleList(customerCode, mensureType);
+    // if (error) {
+    //   this.response(error.code, {
+    //     "error_code": error.error_code,
+    //     "error_description": error.message,
+    //   });
+    //   return;
+    // }
+
     this.response(200, { message: `List of ${customerCode}` });
   }
 

@@ -8,7 +8,7 @@ export class CustomerMySQL extends MysqlConnection implements ICustomerRepositor
 
   public async listMeasure(customerId: string): Promise<any> {
     return await this.connection.query(
-      `SELECT * FROM measure WHERE customer_id = ?`,
+      `SELECT * FROM measures WHERE customer_id = ?`,
       [customerId]);
   }
 }

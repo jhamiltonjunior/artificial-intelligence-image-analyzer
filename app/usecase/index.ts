@@ -1,15 +1,16 @@
-import { IHandleImageAnalyzerRepository, IUseCase, response } from "../domains/repository/index";
+import { ICustomerRepository, IHandleImageAnalyzerRepository, IUseCase, response } from "../domains/repository/index";
 import fs from 'fs/promises';
 import { IToolsUseCase } from "../external/service/interface";
-import { isFloat32Array } from "util/types";
 
 export default class Usecase implements IUseCase {
     private tools: IToolsUseCase
     private handleImageAnalyzerRepository: IHandleImageAnalyzerRepository
+    private handleCustomerRepository: ICustomerRepository
   
-    constructor(tools: IToolsUseCase, handleImageAnalyzerRepository: IHandleImageAnalyzerRepository) {
+    constructor(tools: IToolsUseCase, handleImageAnalyzerRepository: IHandleImageAnalyzerRepository, handleCustomerRepository: ICustomerRepository) {
       this.tools = tools;
       this.handleImageAnalyzerRepository = handleImageAnalyzerRepository;
+      this.handleCustomerRepository = handleCustomerRepository;
     }
 
     public async confirm(data: any): Promise<response | undefined> {
@@ -49,7 +50,6 @@ export default class Usecase implements IUseCase {
           message: `Leitura do mês já realizada`,
         };
       }
-      console.log(measureExists);
 
       try {
         await this.handleImageAnalyzerRepository.confirm(data.measure_uuid, data.confirmed_value);
@@ -65,8 +65,19 @@ export default class Usecase implements IUseCase {
       return undefined;
     }
   
-    public async handleList(customerCode: string): Promise<void> {
-      console.log(`List of ${customerCode}`);
+    public async handleList(customerCode: string, mensureType: string): Promise<response | undefined> {
+      mensureType = mensureType.toLocaleUpperCase();
+
+      if (mensureType !== 'WATER' && mensureType !== 'GAS') 
+        return {
+          code: 400,
+          error_code: 'INVALID_TYPE',
+          message: `Tipo de medição não permitida`,
+        };
+        
+      const measure = await this.handleCustomerRepository.listMeasure(customerCode);
+      
+      return undefined;
     }
 
     public async handleUpload(data: any): Promise<response | undefined> {

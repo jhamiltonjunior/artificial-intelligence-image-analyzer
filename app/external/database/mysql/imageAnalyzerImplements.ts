@@ -6,6 +6,10 @@ export class ImageAnalyzer extends MysqlConnection implements IHandleImageAnalyz
     super(credentials);
   }
 
+  public async listMeasure(customerId: string): Promise<response | undefined> {
+    return undefined;
+  }
+
   public async saveDataGenerateForIA(data: any): Promise<response | undefined> {
     console.log(`handleUpload is work`);
     return undefined;

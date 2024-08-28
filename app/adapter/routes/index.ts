@@ -16,11 +16,14 @@ export default class Routes {
 
     private init() {
         const url = this.req.url || '';
-        const path = new URL(url, `http://${this.req.headers.host}`).pathname;
+        const newURL = new URL(url, `http://${this.req.headers.host}`);
+        const path = newURL.pathname;
         const handleMethodGet = path.split('/');
 
+        const searchParams = newURL.searchParams;
+
         if (this.req.method === 'GET' && handleMethodGet.length === 3 && handleMethodGet[2] === 'list') {
-            this.controller.handleList(handleMethodGet[1]);
+            this.controller.handleList(handleMethodGet[1], searchParams);
             return;
         }
 

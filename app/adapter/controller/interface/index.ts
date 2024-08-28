@@ -2,7 +2,7 @@
 export interface IController {
   upload(): Promise<void>;
   confirm(): Promise<void>;
-  handleList(customerCode: string): Promise<void>;
+  handleList(customerCode: string, searchParams: any): Promise<void>;
   notFound(): void;
   getReq(): any;
   getRes(): any;

@@ -4,6 +4,7 @@ import Controller from './adapter/controller';
 import Usecase from './usecase';
 import ToolsUseCase from './external/service/toolsToUseCase';
 import { ImageAnalyzer } from './external/database/mysql/imageAnalyzerImplements';
+import { CustomerMySQL } from './external/database/mysql/customerImplements';
 
 const host = '127.0.0.1'
 const port = 3000;
@@ -17,8 +18,9 @@ const conn = {
 }
 
 const tools = new ToolsUseCase();
-const connection = new ImageAnalyzer(conn);
-const usecase = new Usecase(tools, connection);
+const imageHandle = new ImageAnalyzer(conn);
+const customer = new CustomerMySQL(conn);
+const usecase = new Usecase(tools, imageHandle, customer);
 
 const server = createServer((req, res) => {
     const controller = new Controller(req, res, usecase);
