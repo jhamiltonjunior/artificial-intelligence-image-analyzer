@@ -17,6 +17,10 @@ CREATE TABLE IF NOT EXISTS image_analyzer.measure (
     FOREIGN KEY (customer_id) REFERENCES customer(code)
 );
 
+SELECT confirmed FROM measure WHERE measure.code = ?;
+
+UPDATE measure SET confirmed = ?, value = ? WHERE measure.code = ?;
+
 INSERT IGNORE INTO image_analyzer.customer (
   code,
   name

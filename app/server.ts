@@ -13,13 +13,11 @@ const conn = {
     port: 3306,
     user: 'root',
     password: '0000',
+    database: 'image_analyzer',
 }
 
 const tools = new ToolsUseCase();
 const connection = new MysqlImplements(conn);
-
-(async () => await connection.init())();
-
 const usecase = new Usecase(tools, connection);
 
 const server = createServer((req, res) => {

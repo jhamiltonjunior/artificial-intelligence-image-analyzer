@@ -1,6 +1,7 @@
 import { IHandleImageAnalyzerRepository, IUseCase, response } from "../domains/repository/index";
 import fs from 'fs/promises';
 import { IToolsUseCase } from "../external/service/interface";
+import { isFloat32Array } from "util/types";
 
 export default class Usecase implements IUseCase {
     private tools: IToolsUseCase
@@ -12,20 +13,53 @@ export default class Usecase implements IUseCase {
     }
 
     public async confirm(data: any): Promise<response | undefined> {
-      console.log(`confirm is work`);
-      if (!data.customer_code || !this.tools.uuidValidate(data.customer_code))
+      if (!data.measure_uuid || !this.tools.uuidValidate(data.measure_uuid))
         return {
           code: 400,
           error_code: 'INVALID_DATA',
-          message: `The customer_code is invalid`,
+          message: `The measure_uuid is invalid`,
         };
 
-      if (!data.confirmed_value || isNaN(data.confirmed_value) || data.confirmed_value < 0)
+      if (
+        data.confirmed_value === "" ||
+        typeof data.confirmed_value !== "number" ||
+        isNaN(data.confirmed_value) ||
+        data.confirmed_value < 0 ||
+        !Number.isInteger(data.confirmed_value)
+      )
         return {
           code: 400,
           error_code: 'INVALID_DATA',
           message: `The confirmed_value is invalid`,
         };
+
+      const measureExists = await this.handleImageAnalyzerRepository.checkIfMeasureExists(data.measure_uuid);
+
+      if (!measureExists)
+        return {
+          code: 404,
+          error_code: 'MEASURE_NOT_FOUND',
+          message: `The measure does not exist`,
+        };
+
+      if (measureExists[0][0].confirmed === 1) {
+        return {
+          code: 409,
+          error_code: 'CONFIRMATION_DUPLICATE',
+          message: `Leitura do mês já realizada`,
+        };
+      }
+
+      try {
+        await this.handleImageAnalyzerRepository.confirm(data.measure_uuid, data.confirmed_value);
+      } catch (err) {
+        console.error('Error to confirm:', err);
+        return {
+          code: 500,
+          error_code: 'INTERNAL_SERVER_ERROR',
+          message: `Error to confirm`,
+        };
+      }
 
       return undefined;
     }

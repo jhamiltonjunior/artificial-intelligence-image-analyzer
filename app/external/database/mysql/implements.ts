@@ -6,6 +6,7 @@ type credentials = {
   port: number;
   user: string;
   password: string;
+  database: string,
 }
 
 export default class MysqlImplements implements IHandleImageAnalyzerRepository {
@@ -18,16 +19,8 @@ export default class MysqlImplements implements IHandleImageAnalyzerRepository {
     this.connect();
   }
 
-  public async init(): Promise<void> {
-    console.log(`init is work`);
-    return undefined;
-  }
-
-  private async connect(): Promise<any> {
-    console.log(`connect is work`);
+  private async connect(): Promise<void> {
     this.connection = await mysql.createConnection(this.credentials);
-
-    return undefined;
   }
 
   public async saveDataGenerateForIA(data: any): Promise<response | undefined> {
@@ -35,11 +28,11 @@ export default class MysqlImplements implements IHandleImageAnalyzerRepository {
     return undefined;
   }
 
-  public async confirm(data: any): Promise<response | undefined> {
-    console.log(`confirm is work`);
+  public async confirm(id: string, value: number): Promise<void> {
+    await this.connection.query('UPDATE measure SET confirmed = 1, value = ? WHERE measure.code = ?', [value, id]);
+  }
 
-    this.connection.query('SELECT * FROM table WHERE id = ?', [data.id]);
-
-    return undefined;
+  public async checkIfMeasureExists(id: string): Promise<any> {
+    return await this.connection.query('SELECT confirmed FROM measure WHERE code = ?', [id]) as any;
   }
 }

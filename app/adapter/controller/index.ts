@@ -63,16 +63,24 @@ export default class Controller implements IController {
       return;
     }
 
-    const error = await this.usecase.confirm(this.body);
-    if (error) {
-      this.response(error.code, {
-        "error_code": "INVALID_DATA",
-        "error_description": error.message,
+    try {
+      const error = await this.usecase.confirm(this.body);
+      if (error) {
+        this.response(error.code, {
+          "error_code": error.error_code,
+          "error_description": error.message,
+        });
+        return;
+      }
+    } catch (error) {
+      this.response(500, {
+        error_code: 'INTERNAL_SERVER_ERROR',
+        error_description: 'error to confirm',
       });
       return;
     }
 
-    this.response(200, { message: `confirm is work` });
+    this.response(200, { success: true });
   }
 
   public async handleList(customerCode: string): Promise<void> {
