@@ -1,7 +1,6 @@
 import mysql from 'mysql2/promise';
-import { IHandleImageAnalyzerRepository, response } from "../../../domains/repository";
 
-type credentials = {
+export type Credentials = {
   host: string;
   port: number;
   user: string;
@@ -9,30 +8,14 @@ type credentials = {
   database: string,
 }
 
-export default class MysqlImplements implements IHandleImageAnalyzerRepository {
-  credentials: credentials
-  connection: mysql.Connection;
+export default class MysqlConnection {
+  protected connection: mysql.Connection;
 
-  constructor(credentials: credentials) {
-    this.credentials = credentials;
-
-    this.connect();
+  constructor(credentials: Credentials) {
+    this.connect(credentials);
   }
 
-  private async connect(): Promise<void> {
-    this.connection = await mysql.createConnection(this.credentials);
-  }
-
-  public async saveDataGenerateForIA(data: any): Promise<response | undefined> {
-    console.log(`handleUpload is work`);
-    return undefined;
-  }
-
-  public async confirm(id: string, value: number): Promise<void> {
-    await this.connection.query('UPDATE measure SET confirmed = 1, value = ? WHERE measure.code = ?', [value, id]);
-  }
-
-  public async checkIfMeasureExists(id: string): Promise<any> {
-    return await this.connection.query('SELECT confirmed FROM measure WHERE code = ?', [id]) as any;
+  private async connect(credentials: Credentials): Promise<void> {
+    this.connection = await mysql.createConnection(credentials);
   }
 }

@@ -15,3 +15,6 @@ export interface IHandleImageAnalyzerRepository {
   checkIfMeasureExists(id: string): Promise<any>;
 }
 
+export interface ICustomerRepository {
+  checkIfMeasureExists(data: any): Promise<response | undefined>;
+}

@@ -3,7 +3,7 @@ import Routes from './adapter/routes';
 import Controller from './adapter/controller';
 import Usecase from './usecase';
 import ToolsUseCase from './external/service/toolsToUseCase';
-import MysqlImplements from './external/database/mysql/implements';
+import { ImageAnalyzer } from './external/database/mysql/imageAnalyzerImplements';
 
 const host = '127.0.0.1'
 const port = 3000;
@@ -17,7 +17,7 @@ const conn = {
 }
 
 const tools = new ToolsUseCase();
-const connection = new MysqlImplements(conn);
+const connection = new ImageAnalyzer(conn);
 const usecase = new Usecase(tools, connection);
 
 const server = createServer((req, res) => {
