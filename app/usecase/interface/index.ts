@@ -1,5 +1,5 @@
 export interface IUseCase {
-  upload(): Promise<void>;
+  handleUpload(data: any): Promise<void>;
   confirm(): Promise<void>;
   handleList(customerCode: string): Promise<void>;
 }

@@ -1,11 +1,13 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { IController } from "./interface";
-import { IUseCase } from "../routes/interface";
+import { IUseCase } from "../../usecase/interface";
+import formidable, {errors as formidableErrors} from 'formidable';
 
 export default class Controller implements IController {
   private req: IncomingMessage;
   private res: ServerResponse;
   private usecase: IUseCase;
+  private body: any;
 
   constructor(req:IncomingMessage, res: ServerResponse, usecase: IUseCase) {
     this.usecase = usecase;
@@ -27,9 +29,15 @@ export default class Controller implements IController {
   }
 
   public async upload(): Promise<void> {
-    this.response(200, { message: `upload is work` });
+    await this.parseJSON();
+    
+    console.log('Body:', this.body);
+    
+    this.response(200, {
+      message: 'upload is work',
+    });
   }
-
+  
   public async confirm(): Promise<void> {
     this.response(200, { message: `confirm is work` });
   }
@@ -40,5 +48,28 @@ export default class Controller implements IController {
 
   notFound(): void {
     this.response(404, { message: 'Not Found' });
+  }
+
+  private async parseJSON(): Promise<any> {
+    let body = '';
+
+    this.req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+
+    this.req.on('end', () => {
+        try {
+            const jsonData = JSON.parse(body);
+            
+            console.log('Dados recebidos:', jsonData);
+            this.body = jsonData
+          } catch (error) {
+            console.error('Erro ao analisar JSON:', error);
+            this.response(500, {
+              error_code: 'INTERNAL_SERVER_ERROR',
+              message: 'Houve um erro interno no servidor',
+            });
+        }
+    });
   }
 }
