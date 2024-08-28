@@ -3,13 +3,26 @@ import Routes from './adapter/routes';
 import Controller from './adapter/controller';
 import Usecase from './usecase';
 import ToolsUseCase from './external/service/toolsToUseCase';
+import MysqlImplements from './external/database/mysql/implements';
 
 const host = '127.0.0.1'
 const port = 3000;
 
+const conn = {
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: '0000',
+}
+
+const tools = new ToolsUseCase();
+const connection = new MysqlImplements(conn);
+
+(async () => await connection.init())();
+
+const usecase = new Usecase(tools, connection);
+
 const server = createServer((req, res) => {
-    const tools = new ToolsUseCase();
-    const usecase = new Usecase(tools);
     const controller = new Controller(req, res, usecase);
     new Routes(controller);
 });

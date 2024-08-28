@@ -1,12 +1,14 @@
-import { IUseCase, response } from "../domains/repository/index";
+import { IHandleImageAnalyzerRepository, IUseCase, response } from "../domains/repository/index";
 import fs from 'fs/promises';
 import { IToolsUseCase } from "../external/service/interface";
 
 export default class Usecase implements IUseCase {
     private tools: IToolsUseCase
+    private handleImageAnalyzerRepository: IHandleImageAnalyzerRepository
   
-    constructor(tools: IToolsUseCase) {
+    constructor(tools: IToolsUseCase, handleImageAnalyzerRepository: IHandleImageAnalyzerRepository) {
       this.tools = tools;
+      this.handleImageAnalyzerRepository = handleImageAnalyzerRepository;
     }
 
     public async confirm(data: any): Promise<response | undefined> {
