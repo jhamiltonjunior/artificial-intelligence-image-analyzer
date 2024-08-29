@@ -14,6 +14,7 @@ export interface IHandleImageAnalyzerRepository {
   saveDataGenerateForIA(data: any): Promise<response | undefined>;
   checkIfMeasureExists(id: string): Promise<any>;
   listMeasure(customerId: string): Promise<response | undefined>;
+  saveMeasure(data: any): Promise<void>;
 }
 
 export interface ICustomerRepository {

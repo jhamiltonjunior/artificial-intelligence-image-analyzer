@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS image_analyzer.measures (
     FOREIGN KEY (customer_id) REFERENCES customer(code)
 );
 
-INSERT INTO measure (
+INSERT INTO measures (
   measure_uuid,
   measure_type,
   measure_value,

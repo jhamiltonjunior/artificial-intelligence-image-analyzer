@@ -114,14 +114,23 @@ export default class Usecase implements IUseCase {
         measure_uuid,
         measure_type: data.measure_type,
         measure_value,
-        measure_datetime: data.measure_datetime,
+        measure_datetime: new Date(data.measure_datetime).toISOString().split('.')[0],
         image_url: `${measure_uuid}.${mimeType.ext}`,
         customer_id: data.customer_code,
       };
 
-      // this.handleImageAnalyzerRepository.saveMeasure(measure);
+      try {
+        await this.handleImageAnalyzerRepository.saveMeasure(measure);
+      } catch (err) {
+        console.error('Error to save measure:', err);
+        return {
+          code: 500,
+          error_code: 'INTERNAL_SERVER_ERROR',
+          message: `Error to save measure`,
+        };
+      }
 
-      const imageOrError = await this.saveImage(data.image, mimeType);
+      const imageOrError = await this.saveImage(data.image, measure_uuid, mimeType);
       if (typeof imageOrError !== 'string')
         return imageOrError;
 
@@ -149,8 +158,8 @@ export default class Usecase implements IUseCase {
       return undefined;
     }
 
-    private async saveImage(image: string, mimeType: {ext: string}): Promise<response | string> {
-      const filePath = `./uploads/${Date.now()}.${mimeType.ext}`;
+    private async saveImage(image: string, nameFile: string, mimeType: {ext: string}): Promise<response | string> {
+      const filePath = `./uploads/${nameFile}.${mimeType.ext}`;
       const dirPath = './uploads';
 
       try {
