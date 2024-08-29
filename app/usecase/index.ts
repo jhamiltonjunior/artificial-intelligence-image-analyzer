@@ -93,7 +93,25 @@ export default class Usecase implements IUseCase {
         return error;
       }
 
-      const imageOrError = await this.saveImage(data.image);
+      const mimeType = await this.detectImageType(data.image);
+      if (!mimeType?.mime) {
+        return {
+          code: 400,
+          error_code: 'INVALID_DATA',
+          message: `The image is invalid`,
+        };
+      }
+
+      console.log('mimeType:', mimeType);
+
+      const valueOrError = this.tools.generativeIA(data.image, mimeType.mime);
+      if (typeof valueOrError !== 'string')
+        return valueOrError;
+      console.log('valueOrError:', valueOrError);
+
+      // this.handleImageAnalyzerRepository.saveMeasure(data);
+
+      const imageOrError = await this.saveImage(data.image, mimeType);
       if (typeof imageOrError !== 'string')
         return imageOrError;
 
@@ -121,16 +139,7 @@ export default class Usecase implements IUseCase {
       return undefined;
     }
 
-    private async saveImage(image: string): Promise<response | string> {
-      const mimeType = await this.detectImageType(image);
-      if (!mimeType?.mime) {
-        return {
-          code: 400,
-          error_code: 'INVALID_DATA',
-          message: `The image is invalid`,
-        };
-      }
-
+    private async saveImage(image: string, mimeType: {ext: string}): Promise<response | string> {
       const filePath = `./uploads/${Date.now()}.${mimeType.ext}`;
       const dirPath = './uploads';
 
@@ -138,6 +147,7 @@ export default class Usecase implements IUseCase {
         if (!await this.checkIfDirExists(dirPath)) {
           fs.mkdir(dirPath, { recursive: true });
         }
+
         fs.writeFile(filePath, image, 'base64')
       } catch (err) {
         console.error('Error to save image:', err);
