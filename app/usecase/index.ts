@@ -65,18 +65,20 @@ export default class Usecase implements IUseCase {
       return undefined;
     }
   
-    public async handleList(customerCode: string, mensureType: string): Promise<response | undefined> {
-      mensureType = mensureType.toLocaleUpperCase();
+    public async handleList(customerCode: string, measureType: string): Promise<response | undefined> {
+      if (measureType) {
+          measureType = measureType?.toLocaleUpperCase();
 
-      if (mensureType !== 'WATER' && mensureType !== 'GAS') 
-        return {
-          code: 400,
-          error_code: 'INVALID_TYPE',
-          message: `Tipo de medição não permitida`,
-        };
-        
+          if (measureType !== 'WATER' && measureType !== 'GAS') 
+            return {
+              code: 400,
+              error_code: 'INVALID_TYPE',
+              message: `Tipo de medição não permitida`,
+            };
+      }
+
       try {
-        return await this.handleCustomerRepository.listMeasure(customerCode, mensureType);
+        return await this.handleCustomerRepository.listMeasure(customerCode, measureType);
       } catch (err) {
         console.error('Error to list measure:', err);
         return {

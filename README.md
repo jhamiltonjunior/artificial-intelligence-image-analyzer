@@ -29,6 +29,8 @@ ver como servir imagens com node puro
 
 verificar se ja existe registro para o mes atual e para o tipo de recibo antes de salvar os dados
 
+
+trabalhar com workers
 ver quais as possibilidades de apagar o arquivo depois de um tempo
 escolher a mais segura
 

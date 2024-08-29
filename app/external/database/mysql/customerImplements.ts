@@ -7,6 +7,14 @@ export class CustomerMySQL extends MysqlConnection implements ICustomerRepositor
   }
 
   public async listMeasure(customerId: string, mensureType: string): Promise<any> {
+    let measureQuery = '';
+    const values = [customerId];
+
+    if (mensureType) {
+      values.push(mensureType);
+      measureQuery = `AND measure_type = ?`;
+    }
+
     const [result] = await this.connection.query(
       `SELECT 
         measure_uuid,
@@ -14,8 +22,8 @@ export class CustomerMySQL extends MysqlConnection implements ICustomerRepositor
         measure_type,
         has_confirmed,
         image_url
-      FROM measures WHERE customer_id = ? AND measure_type = ?`,
-      [customerId, mensureType]);
+      FROM measures WHERE customer_id = ? ${measureQuery}`,
+      values);
 
     return result;
   }
