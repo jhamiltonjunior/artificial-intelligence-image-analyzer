@@ -93,8 +93,6 @@ export default class Usecase implements IUseCase {
         return error;
       }
 
-      const date = new Date(data.measure_datetime).toISOString().split('.')[0];
-
       const mimeType = await this.detectImageType(data.image);
       if (!mimeType?.mime) {
         return {
@@ -106,7 +104,7 @@ export default class Usecase implements IUseCase {
 
       const value = await this.tools.generativeIA(data.image, mimeType.mime);
 
-      if (typeof parseInt(value) !== 'number' || 'error_code' in value)
+      if (typeof parseInt(value) !== 'number' && 'error_code' in value)
         return {
           code: 500,
           error_code: 'INTERNAL_SERVER_ERROR',
@@ -127,7 +125,7 @@ export default class Usecase implements IUseCase {
         measure_uuid,
         measure_type: data.measure_type,
         measure_value,
-        measure_datetime: date,
+        measure_datetime: new Date(data.measure_datetime).getTime(),
         image_url: `${measure_uuid}.${mimeType.ext}`,
         customer_id: data.customer_code,
       };

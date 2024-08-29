@@ -9,7 +9,7 @@ export class ImageAnalyzer extends MysqlConnection implements IHandleImageAnalyz
   public async saveMeasure(data: any): Promise<void> {
     await this.connection.query(`
         INSERT INTO measures (measure_uuid, measure_type, measure_value, measure_datetime, image_url, customer_id)
-        VALUES (?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, DATE_FORMAT(FROM_UNIXTIME(? / 1000), '%Y-%m-%d %H:%i:%s'), ?, ?)`,
        [data.measure_uuid, data.measure_type, data.measure_value, data.measure_datetime, data.image_url, data.customer_id]);
   }
 
