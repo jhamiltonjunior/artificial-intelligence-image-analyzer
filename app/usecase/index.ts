@@ -106,6 +106,20 @@ export default class Usecase implements IUseCase {
 
       const value = await this.tools.generativeIA(data.image, mimeType.mime);
 
+      if (typeof parseInt(value) !== 'number' || 'error_code' in value)
+        return {
+          code: 500,
+          error_code: 'INTERNAL_SERVER_ERROR',
+          message: `Error to connect with IA`,
+        };
+
+      if (value === "++++++")
+        return {
+          code: 400,
+          error_code: 'INVALID_DATA',
+          message: `The image is invalid`,
+        };
+
       const measure_uuid = this.tools.generateUUID();
       const measure_value = parseInt(value);
 

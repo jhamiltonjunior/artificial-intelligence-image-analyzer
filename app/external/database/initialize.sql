@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS image_analyzer;
 
-CREATE TABLE IF NOT EXISTS image_analyzer.customer (
+CREATE TABLE IF NOT EXISTS image_analyzer.customers (
     code VARCHAR(36) PRIMARY KEY NOT NULL,
     name VARCHAR(100) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -29,7 +29,7 @@ INSERT INTO measures (
 )
 VALUES ('f56fce1b-73d5-4b23-81d6-226791aa5fcc', 'TEMP', 36, 1, '2021-09-01 12:00:00', 1, 'https://www.google.com', 'f56fce1b-73d5-4b23-81d6-226791aa5fcc');
 
-INSERT IGNORE INTO image_analyzer.customer (
+INSERT IGNORE INTO image_analyzer.customers (
   code,
   name
 ) VALUES (

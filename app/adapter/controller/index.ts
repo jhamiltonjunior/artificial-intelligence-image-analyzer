@@ -41,7 +41,7 @@ export default class Controller implements IController {
     const error = await this.usecase.handleUpload(this.body);
     if ('error_code' in error) {
       this.response(error.code, {
-        "error_code": "INVALID_DATA",
+        "error_code": error.error_code,
         "error_description": error.message,
       });
       return;
@@ -91,7 +91,7 @@ export default class Controller implements IController {
     const mensureType = searchParams.get('measure_type');
 
     const measureOrError = await this.usecase.handleList(customerCode, mensureType);
-    if (typeof measureOrError === 'object' && measureOrError.code) {
+    if (measureOrError && 'error_code' in measureOrError) {
       console.log('measureOrError:', measureOrError);
       this.response(measureOrError.code, {
         "error_code": measureOrError.error_code,
@@ -102,8 +102,7 @@ export default class Controller implements IController {
 
     const measures = measureOrError
 
-    console.log('measures:', measures);
-    if (!measures) {
+    if (!(measures as any).length) {
       this.response(404, {
         "error_code": "MEASURES_NOT_FOUND",
         "error_description": "Nenhuma leitura encontrada",

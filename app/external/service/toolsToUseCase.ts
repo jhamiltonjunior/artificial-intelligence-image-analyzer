@@ -25,7 +25,7 @@ export default class ToolsUseCase implements IToolsUseCase{
 
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const prompt = "analyze this image, this a measure, who the value that I paid, please return only value who I should paid and should a integer number";
+        const prompt = "analyze this image, this a measure, who the value that I paid, please return only value who I should paid and should a integer number, case you can't find the value return ++++++";
         const image = {
             inlineData: {
                 data: imageBase64,
@@ -33,9 +33,17 @@ export default class ToolsUseCase implements IToolsUseCase{
             },
         };
 
-        const result = await model.generateContent([prompt, image]);
-
-        return result.response.text();
+        try {
+            const result = await model.generateContent([prompt, image]);
+            return result.response.text();
+        } catch (err) {
+            console.log('Error to generate IA final return:', err);
+            return {
+                code: 500,
+                error_code: 'INTERNAL_SERVER_ERROR',
+                message: `Error to generate IA`,
+            };
+        }
     }
 
     public async detectImageType(image: string): Promise<any> {
