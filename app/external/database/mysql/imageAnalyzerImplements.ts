@@ -29,4 +29,19 @@ export class ImageAnalyzer extends MysqlConnection implements IHandleImageAnalyz
   public async checkIfMeasureExists(id: string): Promise<any> {
     return await this.connection.query('SELECT has_confirmed FROM measures WHERE measure_uuid = ?', [id]);
   }
+
+  public async checkIfMeasureExistsInThisPeriod(customerId: string, mensureType: string, measureDatetime: string): Promise<boolean> {
+    const [result] = await this.connection.query(`
+        SELECT * FROM measures 
+        WHERE customer_id = ?
+        AND measure_type = ?
+        AND DATE_FORMAT(measure_datetime, '%Y-%m') = DATE_FORMAT(FROM_UNIXTIME(? / 1000), '%Y-%m')
+        LIMIT 1`,
+        [customerId, mensureType, measureDatetime]);
+
+    console.log((result as any).length)
+
+
+    return (result as any).length > 0;
+  }
 }

@@ -93,6 +93,17 @@ export default class Usecase implements IUseCase {
         return error;
       }
 
+      const measureExists = await this.handleImageAnalyzerRepository.checkIfMeasureExistsInThisPeriod(
+        data.customer_code, data.measure_type, new Date(data.measure_datetime).getTime().toString()
+      );
+
+      if (measureExists)
+        return {
+          code: 409,
+          error_code: 'MEASURE_DUPLICATE',
+          message: `Leitura do mês já realizada`,
+        };
+
       const mimeType = await this.detectImageType(data.image);
       if (!mimeType?.mime) {
         return {

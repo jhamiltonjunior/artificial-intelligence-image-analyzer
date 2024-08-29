@@ -128,7 +128,7 @@ export default class Controller implements IController {
 
       this.req.on('data', (chunk) => {
           body += chunk.toString();
-          console.log('body:', body);
+          // console.log('body:', body);
       });
 
       this.req.on('end', () => {

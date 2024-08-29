@@ -23,6 +23,7 @@ export interface IHandleImageAnalyzerRepository {
   checkIfMeasureExists(id: string): Promise<any>;
   listMeasure(customerId: string): Promise<response | undefined>;
   saveMeasure(data: any): Promise<void>;
+  checkIfMeasureExistsInThisPeriod(customerId: string, mensureType: string, measureDatetime: string): Promise<boolean>;
 }
 
 export interface ICustomerRepository {
