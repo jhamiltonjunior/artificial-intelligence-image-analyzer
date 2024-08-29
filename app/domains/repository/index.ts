@@ -3,8 +3,16 @@ export type response = {
   error_code?: string;
   message: string;
 }
+
+export type responseRegister = {
+  code: number;
+  image_url: string;
+  measure_value: number;
+  measure_uuid: string;
+}
+
 export interface IUseCase {
-  handleUpload(data: any): Promise<response | undefined>;
+  handleUpload(data: any): Promise<response | responseRegister>;
   confirm(data: any): Promise<response | undefined>;
   handleList(customerCode: string, mensureType: string): Promise<response | undefined>;
 }

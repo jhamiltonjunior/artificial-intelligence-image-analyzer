@@ -39,7 +39,7 @@ export default class Controller implements IController {
     }
 
     const error = await this.usecase.handleUpload(this.body);
-    if (error) {
+    if ('error_code' in error) {
       this.response(error.code, {
         "error_code": "INVALID_DATA",
         "error_description": error.message,
@@ -47,8 +47,11 @@ export default class Controller implements IController {
       return;
     }
     
-    this.response(200, {
-      message: 'upload is work',
+    if ('image_url' in error)
+    this.response(error.code, {
+      image_url: error.image_url,
+      measure_value: error.measure_value,
+      measure_uuid: error.measure_uuid,
     });
   }
   

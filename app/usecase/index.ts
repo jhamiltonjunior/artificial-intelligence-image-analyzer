@@ -1,4 +1,4 @@
-import { ICustomerRepository, IHandleImageAnalyzerRepository, IUseCase, response } from "../domains/repository/index";
+import { ICustomerRepository, IHandleImageAnalyzerRepository, IUseCase, response, responseRegister } from "../domains/repository/index";
 import fs from 'fs/promises';
 import { IToolsUseCase } from "./interface";
 
@@ -87,11 +87,13 @@ export default class Usecase implements IUseCase {
       }
     }
 
-    public async handleUpload(data: any): Promise<response | undefined> {
+    public async handleUpload(data: any): Promise<response | responseRegister> {
       const error = this.validateToUpload(data);
       if (error) {
         return error;
       }
+
+      const date = new Date(data.measure_datetime).toISOString().split('.')[0];
 
       const mimeType = await this.detectImageType(data.image);
       if (!mimeType?.mime) {
@@ -102,19 +104,16 @@ export default class Usecase implements IUseCase {
         };
       }
 
-      console.log('mimeType:', mimeType);
-
       const value = await this.tools.generativeIA(data.image, mimeType.mime);
-      console.log('valueOrError:', value);
 
       const measure_uuid = this.tools.generateUUID();
-      const measure_value = value;
+      const measure_value = parseInt(value);
 
       const measure = {
         measure_uuid,
         measure_type: data.measure_type,
         measure_value,
-        measure_datetime: new Date(data.measure_datetime).toISOString().split('.')[0],
+        measure_datetime: date,
         image_url: `${measure_uuid}.${mimeType.ext}`,
         customer_id: data.customer_code,
       };
@@ -139,7 +138,12 @@ export default class Usecase implements IUseCase {
         this.deleteImage(imageOrError);
       }, 60000);
 
-      return undefined;
+      return {
+        code: 200,
+        image_url: `${measure_uuid}.${mimeType.ext}`,
+        measure_value,
+        measure_uuid,
+      };
     }
 
     private async deleteImage(filePath: string): Promise<response | undefined> {
