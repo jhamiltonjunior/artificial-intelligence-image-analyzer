@@ -75,9 +75,16 @@ export default class Usecase implements IUseCase {
           message: `Tipo de medição não permitida`,
         };
         
-      const measure = await this.handleCustomerRepository.listMeasure(customerCode);
-      
-      return undefined;
+      try {
+        return await this.handleCustomerRepository.listMeasure(customerCode, mensureType);
+      } catch (err) {
+        console.error('Error to list measure:', err);
+        return {
+          code: 500,
+          error_code: 'INTERNAL_SERVER_ERROR',
+          message: `Error to list measure`,
+        };
+      }
     }
 
     public async handleUpload(data: any): Promise<response | undefined> {

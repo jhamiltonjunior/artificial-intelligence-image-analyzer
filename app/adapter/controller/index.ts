@@ -87,16 +87,33 @@ export default class Controller implements IController {
 
     const mensureType = searchParams.get('measure_type');
 
-    this.usecase.handleList(customerCode, mensureType);
-    // if (error) {
-    //   this.response(error.code, {
-    //     "error_code": error.error_code,
-    //     "error_description": error.message,
-    //   });
-    //   return;
-    // }
+    const measureOrError = await this.usecase.handleList(customerCode, mensureType);
+    if (typeof measureOrError === 'object' && measureOrError.code) {
+      console.log('measureOrError:', measureOrError);
+      this.response(measureOrError.code, {
+        "error_code": measureOrError.error_code,
+        "error_description": measureOrError.message,
+      });
+      return;
+    }
 
-    this.response(200, { message: `List of ${customerCode}` });
+    const measures = measureOrError
+
+    console.log('measures:', measures);
+    if (!measures) {
+      this.response(404, {
+        "error_code": "MEASURES_NOT_FOUND",
+        "error_description": "Nenhuma leitura encontrada",
+      });
+      return
+    }
+
+    const response ={
+      customer_code: customerCode,
+      measures
+    }
+
+    this.response(200, response);
   }
 
   notFound(): void {

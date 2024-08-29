@@ -17,5 +17,5 @@ export interface IHandleImageAnalyzerRepository {
 }
 
 export interface ICustomerRepository {
-  listMeasure(customerId: string): Promise<response | undefined>;
+  listMeasure(customerId: string, mensureType: string): Promise<response | undefined>;
 }
