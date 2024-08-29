@@ -1,5 +1,5 @@
 import { parse } from "file-type-mime";
-import { IToolsUseCase } from "./interface";
+import { IToolsUseCase } from "../../usecase/interface";
 import { validate as uuidValidate } from 'uuid';
 import isBase64 from 'is-base64';
 

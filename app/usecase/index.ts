@@ -1,6 +1,6 @@
 import { ICustomerRepository, IHandleImageAnalyzerRepository, IUseCase, response } from "../domains/repository/index";
 import fs from 'fs/promises';
-import { IToolsUseCase } from "../external/service/interface";
+import { IToolsUseCase } from "./interface";
 
 export default class Usecase implements IUseCase {
     private tools: IToolsUseCase
@@ -97,7 +97,7 @@ export default class Usecase implements IUseCase {
       if (typeof imageOrError !== 'string')
         return imageOrError;
 
-      // Talvez isso nao seja o suficiente
+      // Isso com certeza nao e o suficiente
       setTimeout(async () => {
         this.deleteImage(imageOrError);
       }, 60000);

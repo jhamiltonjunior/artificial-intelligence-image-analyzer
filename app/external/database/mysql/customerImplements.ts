@@ -7,10 +7,6 @@ export class CustomerMySQL extends MysqlConnection implements ICustomerRepositor
   }
 
   public async listMeasure(customerId: string, mensureType: string): Promise<any> {
-
-    console.log('customerId', customerId);
-    console.log('mensureType', mensureType);
-
     const [result] = await this.connection.query(
       `SELECT 
         measure_uuid,
