@@ -20,3 +20,5 @@ salvei o arquivo mas antes precisei verificar qual a sua extencao
 
 
 salvar se vai dar erro ao deleter a imagem, pois não tem como o usuario saber disso
+
+mudar has confirmed para boolean ao inves de 

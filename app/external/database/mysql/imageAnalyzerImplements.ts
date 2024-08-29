@@ -16,7 +16,7 @@ export class ImageAnalyzer extends MysqlConnection implements IHandleImageAnalyz
   }
 
   public async confirm(id: string, value: number): Promise<void> {
-    await this.connection.query('UPDATE measures SET has_confirmed = 1, confirmed_value = ? WHERE measure_uuid = ?', [value, id]);
+    await this.connection.query('UPDATE measures SET has_confirmed = 1, measure_value = ? WHERE measure_uuid = ?', [value, id]);
   }
 
   public async checkIfMeasureExists(id: string): Promise<any> {

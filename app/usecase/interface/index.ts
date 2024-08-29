@@ -3,4 +3,5 @@ export interface IToolsUseCase {
     uuidValidate(uuid: string): boolean
     detectImageType(image: string): Promise<any>
     generativeIA(imageBase64: string, mimeType: string): Promise<any>
+    generateUUID(): string
 }

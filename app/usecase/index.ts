@@ -104,12 +104,22 @@ export default class Usecase implements IUseCase {
 
       console.log('mimeType:', mimeType);
 
-      const valueOrError = this.tools.generativeIA(data.image, mimeType.mime);
-      if (typeof valueOrError !== 'string')
-        return valueOrError;
-      console.log('valueOrError:', valueOrError);
+      const value = await this.tools.generativeIA(data.image, mimeType.mime);
+      console.log('valueOrError:', value);
 
-      // this.handleImageAnalyzerRepository.saveMeasure(data);
+      const measure_uuid = this.tools.generateUUID();
+      const measure_value = value;
+
+      const measure = {
+        measure_uuid,
+        measure_type: data.measure_type,
+        measure_value,
+        measure_datetime: data.measure_datetime,
+        image_url: `${measure_uuid}.${mimeType.ext}`,
+        customer_id: data.customer_code,
+      };
+
+      // this.handleImageAnalyzerRepository.saveMeasure(measure);
 
       const imageOrError = await this.saveImage(data.image, mimeType);
       if (typeof imageOrError !== 'string')
