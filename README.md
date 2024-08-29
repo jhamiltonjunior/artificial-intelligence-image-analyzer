@@ -22,3 +22,14 @@ salvei o arquivo mas antes precisei verificar qual a sua extencao
 salvar se vai dar erro ao deleter a imagem, pois não tem como o usuario saber disso
 
 mudar has confirmed para boolean ao inves de 
+
+
+
+ver como servir imagens com node puro
+
+verificar se ja existe registro para o mes atual e para o tipo de recibo antes de salvar os dados
+
+ver quais as possibilidades de apagar o arquivo depois de um tempo
+escolher a mais segura
+
+documentar
