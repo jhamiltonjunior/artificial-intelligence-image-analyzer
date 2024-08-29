@@ -19,13 +19,16 @@ export default class Routes {
         const newURL = new URL(url, `http://${this.req.headers.host}`);
         const path = newURL.pathname;
         const handleMethodGet = path.split('/');
-
+        
         const searchParams = newURL.searchParams;
 
         if (this.req.method === 'GET' && handleMethodGet.length === 3 && handleMethodGet[2] === 'list') {
             this.controller.handleList(handleMethodGet[1], searchParams);
             return;
         }
+
+        if (path.startsWith('/file/') && this.req.method === 'GET')
+            return this.controller.serveStaticFiles(path);
 
         switch (url && this.req.method) {
             case '/upload' && 'POST':

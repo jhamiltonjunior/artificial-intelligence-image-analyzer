@@ -6,4 +6,5 @@ export interface IController {
   notFound(): void;
   getReq(): any;
   getRes(): any;
+  serveStaticFiles(url: string): Promise<void>;
 }
