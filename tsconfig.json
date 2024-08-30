@@ -5,19 +5,27 @@
   
     "compilerOptions": {
       "lib": ["es2023"],
-      "module": "node16",
-      "target": "es2022",
+      // "module": "node16",
+      // "target": "es2022",
   
+      // "strict": true,
+      // "esModuleInterop": true,
+      // "skipLibCheck": true,
+      "moduleResolution": "node16",
+      // "forceConsistentCasingInFileNames": true,
+      "allowJs": true,
+      "outDir": "./build",
+      "rootDir": "./app",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "target": "es6",
+      "module": "Node16",
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "moduleResolution": "node16",
       "forceConsistentCasingInFileNames": true,
-      "allowJs": true,
-      "outDir": "build",
-      "rootDir": "./app",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true
-    }
+    },
+    "include": ["app/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts", "build"]
   }
   

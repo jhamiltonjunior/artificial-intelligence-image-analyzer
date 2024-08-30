@@ -6,17 +6,17 @@ import ToolsUseCase from './external/service/toolsToUseCase.mjs';
 import { ImageAnalyzer } from './external/database/mysql/imageAnalyzerImplements.js';
 import { CustomerMySQL } from './external/database/mysql/customerImplements.js';
 
-const host = '127.0.0.1'
+const host = '0.0.0.0'
 const port = 3000;
 
 const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306;
 
 const conn = {
-    host: process.env.DB_HOST || 'localhost',
-    port: dbPort,
-    user: process.env.DB_USER || 'user',
-    password: process.env.DB_PASSWORD || 'user_password',
-    database: process.env.DB_NAME || 'image_analyzer',
+    host: 'artificial-intelligence-image-analyzer-mysqldb-1',
+    port: 3306,
+    user: 'root',
+    password: 'root_password',
+    database: 'image_analyzer',
 };
 
 const tools = new ToolsUseCase();
@@ -25,6 +25,9 @@ const customer = new CustomerMySQL(conn);
 const usecase = new Usecase(tools, imageHandle, customer);
 
 const server = createServer((req, res) => {
+
+    console.log('printando o host', req.headers.host);
+
     try {
         const controller = new Controller(req, res, usecase);
         new Routes(controller);
