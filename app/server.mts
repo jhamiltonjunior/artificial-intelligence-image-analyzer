@@ -9,13 +9,15 @@ import { CustomerMySQL } from './external/database/mysql/customerImplements.js';
 const host = '127.0.0.1'
 const port = 3000;
 
+const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306;
+
 const conn = {
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: '0000',
-    database: 'image_analyzer',
-}
+    host: process.env.DB_HOST || 'localhost',
+    port: dbPort,
+    user: process.env.DB_USER || 'user',
+    password: process.env.DB_PASSWORD || 'user_password',
+    database: process.env.DB_NAME || 'image_analyzer',
+};
 
 const tools = new ToolsUseCase();
 const imageHandle = new ImageAnalyzer(conn);
