@@ -29,10 +29,12 @@ trabalhar com workers
 ver quais as possibilidades de apagar o arquivo depois de um tempo
 escolher a mais segura
 
-
-
-
-
-
 mudar has confirmed para boolean ao inves de numerio
+
+
+
+iniciar com docker composer
+inciar o banco de dados junto
+
+
 documentar
