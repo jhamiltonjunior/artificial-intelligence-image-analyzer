@@ -20,7 +20,12 @@ export class CustomerMySQL extends MysqlConnection implements ICustomerRepositor
         measure_uuid,
         measure_datetime,
         measure_type,
-        has_confirmed,
+        (
+          CASE
+            WHEN has_confirmed = 1 THEN 'true'
+            ELSE 'false'
+          END
+        ) as has_confirmed,
         image_url
       FROM measures WHERE customer_id = ? ${measureQuery}`,
       values);
