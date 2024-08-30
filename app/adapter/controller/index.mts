@@ -4,7 +4,7 @@ import { IUseCase } from "../../domains/repository/index.js";
 import path from "path";
 import fs from 'fs';
 import { parse } from 'file-type-mime';
-
+const __dirname = path.resolve()
 export class Controller implements IController {
   private req: IncomingMessage;
   private res: ServerResponse;
@@ -122,7 +122,7 @@ export class Controller implements IController {
   }
 
   public async serveStaticFiles(url: string): Promise<void> {
-    const filePath = path.join(__dirname, '../../..', url);
+    const filePath = path.join(__dirname, url);
 
     fs.readFile(filePath, (err, data) => {
       if (err) {
