@@ -1,10 +1,10 @@
 import { createServer } from 'node:http';
-import Routes from './adapter/routes';
-import Controller from './adapter/controller';
-import Usecase from './usecase';
-import ToolsUseCase from './external/service/toolsToUseCase';
-import { ImageAnalyzer } from './external/database/mysql/imageAnalyzerImplements';
-import { CustomerMySQL } from './external/database/mysql/customerImplements';
+import {Routes} from './adapter/routes/index.mjs';
+import {Controller} from './adapter/controller/index.mjs';
+import { Usecase } from './usecase/index.js';
+import ToolsUseCase from './external/service/toolsToUseCase.mjs';
+import { ImageAnalyzer } from './external/database/mysql/imageAnalyzerImplements.js';
+import { CustomerMySQL } from './external/database/mysql/customerImplements.js';
 
 const host = '127.0.0.1'
 const port = 3000;

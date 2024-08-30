@@ -9,7 +9,7 @@ export type Credentials = {
 }
 
 export default class MysqlConnection {
-  protected connection: mysql.Connection;
+  protected connection!: mysql.Connection;
 
   constructor(credentials: Credentials) {
     this.connect(credentials);

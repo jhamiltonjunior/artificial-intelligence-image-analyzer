@@ -1,8 +1,8 @@
 import { IncomingMessage, ServerResponse } from "node:http";
-import { IController } from "../controller/interface";
-import Controller from "../controller";
+import { IController } from "../controller/interface/index.js";
+import {Controller} from "../controller/index.mjs";
 
-export default class Routes {
+export class Routes {
     private req: IncomingMessage;
     private res: ServerResponse;
     private controller: IController;

@@ -2,7 +2,7 @@ import { ICustomerRepository, IHandleImageAnalyzerRepository, IUseCase, response
 import fs from 'fs/promises';
 import { IToolsUseCase } from "./interface";
 
-export default class Usecase implements IUseCase {
+export class Usecase implements IUseCase {
     private tools: IToolsUseCase
     private handleImageAnalyzerRepository: IHandleImageAnalyzerRepository
     private handleCustomerRepository: ICustomerRepository

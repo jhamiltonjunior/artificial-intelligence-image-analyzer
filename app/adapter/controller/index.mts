@@ -1,11 +1,11 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { IController } from "./interface";
-import { IUseCase } from "../../domains/repository/index";
+import { IController } from "./interface/index.js";
+import { IUseCase } from "../../domains/repository/index.js";
 import path from "path";
 import fs from 'fs';
 import { parse } from 'file-type-mime';
 
-export default class Controller implements IController {
+export class Controller implements IController {
   private req: IncomingMessage;
   private res: ServerResponse;
   private usecase: IUseCase;

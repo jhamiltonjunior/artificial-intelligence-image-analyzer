@@ -1,9 +1,9 @@
 import { parse } from 'file-type-mime';
-import { IToolsUseCase } from "../../usecase/interface";
+import { IToolsUseCase } from "../../usecase/interface/index.js";
 import { validate as uuidValidate, v4 as uuid } from 'uuid';
 import isBase64 from 'is-base64';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { response } from '../../domains/repository';
+import { response } from '../../domains/repository/index.js';
 import cron from 'node-cron';
 import fs from 'fs';
 

@@ -22,8 +22,8 @@ export class CustomerMySQL extends MysqlConnection implements ICustomerRepositor
         measure_type,
         (
           CASE
-            WHEN has_confirmed = 1 THEN 'true'
-            ELSE 'false'
+            WHEN has_confirmed = 1 THEN true
+            ELSE false
           END
         ) as has_confirmed,
         image_url
