@@ -159,33 +159,12 @@ export default class Usecase implements IUseCase {
       if (typeof imageOrError !== 'string')
         return imageOrError;
 
-      // Isso com certeza nao e o suficiente
-      setTimeout(async () => {
-        this.deleteImage(imageOrError);
-      }, 60000);
-
       return {
         code: 200,
         image_url,
         measure_value,
         measure_uuid,
       };
-    }
-
-    private async deleteImage(filePath: string): Promise<response | undefined> {
-      try{
-        fs.unlink(filePath)
-      } catch (err) {
-        // salvar os dados em um arquivo de log
-        console.error('Error to delete image:', err);
-          // return {
-          //   code: 500,
-          //   error_code: 'INTERNAL_SERVER_ERROR',
-          //   message: `Error to delete image`,
-          // };
-      }
-
-      return undefined;
     }
 
     private async saveImage(image: string, nameFile: string, mimeType: {ext: string}): Promise<response | string> {

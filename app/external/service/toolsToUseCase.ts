@@ -4,9 +4,48 @@ import { validate as uuidValidate, v4 as uuid } from 'uuid';
 import isBase64 from 'is-base64';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { response } from '../../domains/repository';
+import cron from 'node-cron';
+import fs from 'fs';
 
 export default class ToolsUseCase implements IToolsUseCase{
-    constructor() {}
+    constructor() {
+        this.scheduleToDeleteAllImagesInFolderWhenServerIsStarted();
+    }
+
+    private scheduleToDeleteAllImagesInFolderWhenServerIsStarted(folderPath?: string): void {
+        if (!folderPath)
+            folderPath =  'uploads';
+        
+        const ONE_HOUR = 3600000;
+        cron.schedule('*/1 * * * *', () => {
+            fs.readdir(folderPath, (err, files) => {
+                if (err) {
+                    console.log('Error to read folder:', err);
+                    return;
+                }
+
+                files.forEach((file) => {
+                    const filePath = `${folderPath}/${file}`;
+                    fs.stat(filePath, (err, stats) => {
+                        if (err) {
+                            console.log('err:', err);
+                            return;
+                        }
+                
+                        if (stats.birthtimeMs < Date.now() - ONE_HOUR) {
+                            fs.unlink(filePath, (err) => {
+                            if (err) {
+                                console.log('err:', err);
+                                return;
+                            }
+                            });
+                        }
+                    });
+                });
+            });
+        });
+
+    }
 
     public generateUUID(): string {
         return uuid();
@@ -59,5 +98,25 @@ export default class ToolsUseCase implements IToolsUseCase{
 
     public uuidValidate(uuid: string): boolean {
         return uuidValidate(uuid);
+    }
+
+    public scheduleToDeleteImage(filePath: string, time: number): void {
+        cron.schedule('*/1 * * * *', () => {
+            fs.stat(filePath, (err, stats) => {
+              if (err) {
+                console.log('err:', err);
+                return;
+              }
+      
+              if (stats.birthtimeMs < Date.now() - time) {
+                fs.unlink(filePath, (err) => {
+                  if (err) {
+                    console.log('err:', err);
+                    return;
+                  }
+                });
+              }
+            });
+        });
     }
 }
