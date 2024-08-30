@@ -23,8 +23,16 @@ const customer = new CustomerMySQL(conn);
 const usecase = new Usecase(tools, imageHandle, customer);
 
 const server = createServer((req, res) => {
-    const controller = new Controller(req, res, usecase);
-    new Routes(controller);
+    try {
+        const controller = new Controller(req, res, usecase);
+        new Routes(controller);
+    } catch (error) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            error_code: 'INTERNAL_SERVER_ERROR',
+            error_description: 'internal error',
+        }));
+    }
 });
 
 server.listen(port, host, () => {
@@ -32,3 +40,10 @@ server.listen(port, host, () => {
 });
 
 
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection:', reason);
+});
