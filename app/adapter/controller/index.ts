@@ -125,20 +125,20 @@ export default class Controller implements IController {
     const filePath = path.join(__dirname, '../../..', url);
 
     fs.readFile(filePath, (err, data) => {
-        if (err) {
-            console.log('err:', err);
-            this.response(404, {
-              "error_code": "IMAGE_NOT_FOUND",
-              "error_description": "Nenhuma imagem encontrada",
-            });
-            return;
-        }
+      if (err) {
+        console.log('err:', err);
+        this.response(404, {
+          "error_code": "IMAGE_NOT_FOUND",
+          "error_description": "Nenhuma imagem encontrada",
+        });
+        return;
+      }
 
-        const type = parse(data);
-        const mimeType = type ? type.mime : 'application/octet-stream';
+      const type = parse(data);
+      const mimeType = type ? type.mime : 'application/octet-stream';
 
-        this.res.writeHead(200, { 'Content-Type': mimeType });
-        this.res.end(data);
+      this.res.writeHead(200, { 'Content-Type': mimeType });
+      this.res.end(data);
     });
   }
 

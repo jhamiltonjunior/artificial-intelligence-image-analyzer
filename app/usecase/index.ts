@@ -133,13 +133,14 @@ export default class Usecase implements IUseCase {
 
       const measure_uuid = this.tools.generateUUID();
       const measure_value = parseInt(value);
+      const image_url = `/uploads/${measure_uuid}.${mimeType.ext}`;
 
       const measure = {
         measure_uuid,
         measure_type: data.measure_type,
         measure_value,
         measure_datetime: new Date(data.measure_datetime).getTime(),
-        image_url: `${measure_uuid}.${mimeType.ext}`,
+        image_url,
         customer_id: data.customer_code,
       };
 
@@ -165,7 +166,7 @@ export default class Usecase implements IUseCase {
 
       return {
         code: 200,
-        image_url: `${measure_uuid}.${mimeType.ext}`,
+        image_url,
         measure_value,
         measure_uuid,
       };
