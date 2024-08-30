@@ -27,7 +27,7 @@ export default class Routes {
             return;
         }
 
-        if (path.startsWith('/file/') && this.req.method === 'GET')
+        if (path.startsWith('/uploads/') && this.req.method === 'GET')
             return this.controller.serveStaticFiles(path);
 
         switch (url && this.req.method) {

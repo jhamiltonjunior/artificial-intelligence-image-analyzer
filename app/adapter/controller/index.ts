@@ -3,6 +3,7 @@ import { IController } from "./interface";
 import { IUseCase } from "../../domains/repository/index";
 import path from "path";
 import fs from 'fs';
+import { parse } from 'file-type-mime';
 
 export default class Controller implements IController {
   private req: IncomingMessage;
@@ -123,21 +124,21 @@ export default class Controller implements IController {
   public async serveStaticFiles(url: string): Promise<void> {
     const filePath = path.join(__dirname, '../../..', url);
 
-    console.log('filePath:', filePath);
-
-    // Verifica se o arquivo existe
-    fs.stat(filePath, (err, stats) => {
+    fs.readFile(filePath, (err, data) => {
         if (err) {
             console.log('err:', err);
-            this.res.writeHead(404, { 'Content-Type': 'text/plain' });
-            this.res.end('File not found');
+            this.response(404, {
+              "error_code": "IMAGE_NOT_FOUND",
+              "error_description": "Nenhuma imagem encontrada",
+            });
             return;
         }
 
-        // Serve o arquivo
-        this.res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
-        const readStream = fs.createReadStream(filePath);
-        readStream.pipe(this.res);
+        const type = parse(data);
+        const mimeType = type ? type.mime : 'application/octet-stream';
+
+        this.res.writeHead(200, { 'Content-Type': mimeType });
+        this.res.end(data);
     });
   }
 
