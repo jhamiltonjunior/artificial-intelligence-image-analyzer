@@ -12,7 +12,7 @@ const port = 3000;
 const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306;
 
 const conn = {
-    host: 'artificial-intelligence-image-analyzer-mysqldb-1',
+    host: 'mysqldb',
     port: 3306,
     user: 'root',
     password: 'root_password',

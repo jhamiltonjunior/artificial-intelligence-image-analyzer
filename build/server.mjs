@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { createServer } from 'node:http';
 import { Routes } from './adapter/routes/index.mjs';
 import { Controller } from './adapter/controller/index.mjs';
@@ -42,14 +33,8 @@ const server = createServer((req, res) => {
         }));
     }
 });
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield fetch('http://localhost:3000/58e04248-aa27-4d6e-98d7-69bf905e27fc/list?measure_type=');
-    const data = yield result.json();
-    console.log(data);
-    console.log('Server is running');
-}))();
 server.listen(port, host, () => {
-    console.log(`Listenng on ${host}:${port}`);
+    console.log(`Listening on ${host}:${port}`);
 });
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
