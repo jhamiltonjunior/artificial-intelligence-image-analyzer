@@ -1,40 +1,85 @@
-comecei adicionando as rotas no insomnia
+# Analisador de Imagens com Inteligência Artificial
 
-comecei analizando quem seria as entidades do projeto
+## Descrição
+Este projeto é um analisador de imagens utilizando inteligência artificial. Ele permite o upload de imagens, análise e armazenamento dos resultados em um banco de dados.
 
-Criei um pequeno modelo de como vai funcionar o roteamento
+## Docker
+Para rodar o projeto utilizando Docker, siga os passos abaixo:
+1. Execute o projeto com o comando:
+   ```sh
+   docker-compose up
+   ```
 
-depois criei os controllers e rotas, nao satisfeito criei interfaces para o controller para que a rota nao fique dependente
-daquela class, nao gostei dessa ideia
+   
+# Experiência de Desenvolvimento
+Adicionando Rotas no Insomnia
+Comecei adicionando as rotas no Insomnia para testar as requisições HTTP e garantir que o backend estava respondendo corretamente.
 
-proximo passo: interface para casos de uso
+## Análise das Entidades do Projeto
+Analisei quais seriam as entidades do projeto para definir a estrutura do banco de dados e as interações entre elas.
 
-adicionei injecao de dependencia na class de rotas, pois ela ainda dependia do controller, e isso deixava os teste mais dificeis
+## Modelo de Roteamento
+Criei um pequeno modelo de como funcionaria o roteamento, definindo as principais rotas e seus respectivos controladores.
 
-precisei pegar o conteudo do body
+## Criação dos Controllers e Rotas
+Desenvolvi os controllers e rotas. Inicialmente, criei interfaces para os controllers para que as rotas não ficassem dependentes de uma classe específica, mas não gostei dessa ideia.
 
-salvar a imagens em uma pasta tmp ou static e apagar depois
+## Interface para Casos de Uso
+O próximo passo foi criar interfaces para os casos de uso, garantindo que a lógica de negócio estivesse bem definida e desacoplada das outras camadas.
 
-precisei saber qual a extencao da imagem pois isso pode ser variavel
-salvei o arquivo mas antes precisei verificar qual a sua extencao
+## Injeção de Dependência
+Adicionei injeção de dependência na classe de rotas, pois ela ainda dependia do controller, o que dificultava os testes.
 
+## Manipulação do Conteúdo do Body
+Implementei a lógica para pegar o conteúdo do body das requisições, permitindo o processamento dos dados enviados pelo cliente.
 
-salvar se vai dar erro ao deleter a imagem, pois não tem como o usuario saber disso
+## Salvamento de Imagens
+Desenvolvi a funcionalidade para salvar imagens em uma pasta temporária ou estática e apagar depois. Foi necessário verificar a extensão da imagem, pois isso pode variar.
 
-ver como servir imagens com node puro
+## Tratamento de Erros ao Deletar Imagens
+Implementei a lógica para tratar erros ao deletar imagens, pois o usuário não tem como saber se houve um erro durante a exclusão.
 
-verificar se ja existe registro para o mes atual e para o tipo de recibo antes de salvar os dados
+## Servir Imagens com Node Puro
+Pesquisei como servir imagens utilizando apenas Node.js, sem frameworks adicionais.
 
-trabalhar com workers
-ver quais as possibilidades de apagar o arquivo depois de um tempo
-escolher a mais segura
+## Verificação de Registros Existentes
+Implementei a verificação para saber se já existe registro para o mês atual e para o tipo de recibo antes de salvar os dados.
 
-mudar has confirmed para boolean ao inves de numerio
+## Trabalhando com Workers
+Explorei as possibilidades de trabalhar com workers para apagar arquivos depois de um tempo, escolhendo a abordagem mais segura.
 
+## Alteração de Tipos de Dados
+Mudei o campo has_confirmed para boolean ao invés de numérico, tornando o código mais claro e fácil de entender.
 
+## Iniciar com Docker Compose
+Configurei o Docker Compose para iniciar o banco de dados junto com a aplicação, facilitando o desenvolvimento e a implantação.
 
-iniciar com docker composer
-inciar o banco de dados junto
+# Instalação
 
+## Instalação
+Clone o repositório:
+git clone <URL_DO_REPOSITORIO>
 
-documentar
+Instale as dependências:
+npm i
+## Configuração
+- Crie um arquivo .env na raiz do projeto e configure as variáveis de ambiente necessárias.
+- Configure o banco de dados no arquivo docker-compose.yml.
+# Uso
+Inicie o servidor:
+```sh
+npm run build && npm start
+```
+
+## Acesse o aplicativo em http://localhost:3000.
+
+# Testes
+Para rodar os testes, utilize o comando:
+npm test
+
+# Contribuição
+Faça um fork do projeto.
+Crie uma nova branch `(git checkout -b feature/nova-feature)`.
+Commit suas mudanças `(git commit -am 'Adiciona nova feature')`.
+Faça o push para a branch `(git push origin feature/nova-feature)`.
+Abra um Pull Request.
